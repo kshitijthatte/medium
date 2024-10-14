@@ -23,6 +23,7 @@ blogRouter.use("/*", async (c, next) => {
   const token = jwt.split(" ")[1];
 
   const payload = (await verify(token, c.env.JWT_SECRET)) as any;
+  console.log(payload)
   if (payload) {
     c.set("userId", payload.id || "");
     await next();
@@ -69,6 +70,7 @@ blogRouter.put("/", async c => {
     const blog = await prisma.blog.update({
       where: {
         id: body.id,
+        authorId: c.get("userId")
       },
       data: {
         title: body.title,
